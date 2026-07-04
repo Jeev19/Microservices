@@ -1,0 +1,29 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/Jeev19/ConfigurationProperties
+          default-label: main          # branch name — change to master if needed
+          clone-on-start: true         # clones the repo when config-server boots
+          force-pull: true             # always pulls latest, ignores local cache
+          timeout: 10                  # seconds before giving up on git fetch
+          # If repo is private, add these:
+          # username: your-github-username
+          # password: your-github-personal-access-token
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,env,refresh
+
+logging:
+  level:
+    com.example.configserver: INFO
+    org.springframework.cloud.config: DEBUG  # helpful to see git fetch logs

@@ -1,52 +1,14 @@
-server:
-  port: 8081
-
 spring:
   application:
-    name: order-service
-  datasource:
-    url: jdbc:h2:mem:orderdb
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-  h2:
-    console:
-      enabled: true
+    name: order-service          # config server looks for order-service.yml using this name
+  config:
+    import: "configserver:http://localhost:8888"
 
-services:
-  inventory-url: http://localhost:8082
-  payment-url: http://localhost:8083
-
-resilience4j:
-  circuitbreaker:
-    instances:
-      paymentService:
-        register-health-indicator: true
-        sliding-window-size: 5
-        sliding-window-type: COUNT_BASED
-        failure-rate-threshold: 50
-        wait-duration-in-open-state: 10s
-        permitted-number-of-calls-in-half-open-state: 3
-        automatic-transition-from-open-to-half-open-enabled: true
-  retry:
-    instances:
-      paymentService:
-        max-attempts: 2
-        wait-duration: 500ms
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,circuitbreakers,circuitbreakerevents
-  endpoint:
-    health:
-      show-details: always
-
-logging:
-  level:
-    com.example.order: INFO
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30

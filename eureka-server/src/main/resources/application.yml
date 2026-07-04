@@ -1,0 +1,33 @@
+server:
+  port: 8761
+
+spring:
+  application:
+    name: eureka-server
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    # This IS the server — it should not register itself or fetch registry from itself
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+  server:
+    # How long (ms) the server waits before removing an instance that stopped sending heartbeats
+    eviction-interval-timer-in-ms: 5000
+    # Disable self-preservation mode in development so instances are evicted quickly
+    enable-self-preservation: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+logging:
+  level:
+    com.example.eurekaserver: INFO
+    com.netflix.eureka: WARN
+    com.netflix.discovery: WARN
